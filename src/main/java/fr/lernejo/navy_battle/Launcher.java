@@ -1,5 +1,4 @@
 package fr.lernejo.navy_battle;
-
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -36,21 +35,25 @@ public class Launcher {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         System.out.println(args.length);
         if (args.length > 0) {
             if (args.length == 1) {
-                HttpServer serv = HttpServer.create(new InetSocketAddress(parseInt(args[0])), 0);
-                ExecutorService es = Executors.newFixedThreadPool(1);
-                serv.createContext("/ping", new MyHandler());
-                serv.createContext("/api/game/start", new JsonHandler());
-                System.out.println("heeeee");
-                serv.start();
+                if (parseInt(args[0]) < 10000) {
+                    HttpServer serv = HttpServer.create(new InetSocketAddress(parseInt(args[0])), 0);
+                    ExecutorService es = Executors.newFixedThreadPool(1);
+                    serv.createContext("/ping", new MyHandler());
+                    serv.createContext("/api/game/start", new JsonHandler());
+                    System.out.println("heeeee");
+                    serv.start();
+                }else{
+                    throw new IllegalArgumentException("port trop grand");
+                }
             }
 
 
         }else{
-            System.out.println("aucun port passé en argument");
+            throw new IOException();
         }
     }
 }
